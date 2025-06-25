@@ -19,7 +19,7 @@ interface ResponseTransforms {
 
 export class StrapiResponseTransformer {
     mediaFields: string[] = [];
-    cname: string = strapi.config.get('server.cname');
+    cname: string = process.env.CNAME;
 
     /**
      * Find the UID for a specific API based on its plural name
@@ -111,7 +111,7 @@ export class StrapiResponseTransformer {
                     }
                     else{
                         const host = new URL(url).host;
-                        normalizedData[key] = `${url}`.replace(host, `${this.cname}`);
+                        normalizedData[key] = `${url}`.replace(host, `${this.cname}/uploads`);
                     }
                 }
                 catch (error) {

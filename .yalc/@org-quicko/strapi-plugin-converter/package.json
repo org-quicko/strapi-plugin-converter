@@ -3,7 +3,7 @@
   "description": "A Strapi plugin that converts API responses into a standardized response format. This plugin automatically transforms Strapi's default API response structure to create a flattened data format.",
   "license": "ISC",
   "author": "Quicko <developer@quicko.org.in>",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "keywords": [],
   "type": "commonjs",
   "exports": {
@@ -29,13 +29,6 @@
     "verify": "strapi-plugin verify",
     "test:ts:back": "run -T tsc -p server/tsconfig.json"
   },
-  "devDependencies": {
-    "@strapi/sdk-plugin": "^5.2.7",
-    "@strapi/strapi": "^5.4.0",
-    "@strapi/typescript-utils": "^5.4.0",
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.3"
-  },
   "peerDependencies": {
     "@org-quicko/core": "^1.1.0",
     "@strapi/strapi": "^5.4.0",
@@ -47,7 +40,5 @@
     "displayName": "org-quicko-strapi-plugin-converter",
     "description": "A Strapi plugin that converts API responses into a standardized response format. This plugin automatically transforms Strapi's default API response structure to create a flattened data format."
   },
-  "dependencies": {
-    "@org-quicko/strapi-plugin-converter": "file:.yalc/@org-quicko/strapi-plugin-converter"
-  }
+  "yalcSig": "ef18101b1f06c6ed2c84d38237f9393b"
 }
