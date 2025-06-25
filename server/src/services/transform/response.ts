@@ -19,7 +19,7 @@ interface ResponseTransforms {
 
 export class StrapiResponseTransformer {
     mediaFields: string[] = [];
-
+    cname: string = strapi.config.get('server.cname');
 
     /**
      * Find the UID for a specific API based on its plural name
@@ -71,11 +71,11 @@ export class StrapiResponseTransformer {
 
 
     /**
- * Recursively converts data to a JSONValue format.
- * Handles arrays, objects, and nested structures specific to Strapi's API response.
- * @param data The input data to be converted.
- * @returns The normalized JSONValue.
- */
+     * Recursively converts data to a JSONValue format.
+     * Handles arrays, objects, and nested structures specific to Strapi's API response.
+     * @param data The input data to be converted.
+     * @returns The normalized JSONValue.
+     */
     convertTo(data: any, component = ''): JSONValue {
         if (Array.isArray(data)) {
             return data.map(item => this.convertTo(item, component));
@@ -104,7 +104,14 @@ export class StrapiResponseTransformer {
 
         for (const key in attributes) {
             if (this.mediaFields.includes(component ? `${component}.${key}` : key) && this.hasUrlAttribute(attributes, key)) {
-                normalizedData[key] = `${attributes[key].url}`;
+                const url = attributes[key].url;
+                if(url.startsWith('/')){
+                    normalizedData[key] = `${this.cname}${url}`;
+                }
+                else{
+                    const host = new URL(url).host;
+                    normalizedData[key] = `${attributes[key].url}`.replace(host, `${this.cname}`);
+                }
             } else {
                 normalizedData[key] = this.convertTo(attributes[key], component ? `${component}.${key}` : key);
             }
