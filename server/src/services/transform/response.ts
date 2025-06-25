@@ -104,13 +104,19 @@ export class StrapiResponseTransformer {
 
         for (const key in attributes) {
             if (this.mediaFields.includes(component ? `${component}.${key}` : key) && this.hasUrlAttribute(attributes, key)) {
-                const url = attributes[key].url;
-                if(url.startsWith('/')){
-                    normalizedData[key] = `${this.cname}${url}`;
+                try {
+                    const url = attributes[key].url ?? '';
+                    if(url.startsWith('/')){
+                        normalizedData[key] = `${this.cname}${url}`;
+                    }
+                    else{
+                        const host = new URL(url).host;
+                        normalizedData[key] = `${url}`.replace(host, `${this.cname}`);
+                    }
                 }
-                else{
-                    const host = new URL(url).host;
-                    normalizedData[key] = `${attributes[key].url}`.replace(host, `${this.cname}`);
+                catch (error) {
+                    strapi.log.error(`Converter | [${component}.${key}] Error processing media field: ${error.message}`);
+                    normalizedData[key] = attributes[key];
                 }
             } else {
                 normalizedData[key] = this.convertTo(attributes[key], component ? `${component}.${key}` : key);
