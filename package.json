@@ -3,7 +3,7 @@
   "description": "A Strapi plugin that converts API responses into a standardized response format. This plugin automatically transforms Strapi's default API response structure to create a flattened data format.",
   "license": "ISC",
   "author": "Quicko <developer@quicko.org.in>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [],
   "type": "commonjs",
   "exports": {
