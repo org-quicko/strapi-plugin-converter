@@ -104,15 +104,19 @@ export class StrapiResponseTransformer {
       ) {
         if (this.cname) {
           try {
-            const host = new URL(attributes[key].url).host;
-            normalizedData[key] = `${host}`.replace(host, `${this.cname}`);
+            const url = attributes[key].url ?? '';
+            if (url.startsWith('/')) normalizedData[key] = `${this.cname}${url}`;
+            else normalizedData[key] = `${url}`.replace(new URL(url).host, `${this.cname}`);
           } catch (error) {
             strapi.log.warn(
-              `Converter | [${component}.${key}] host not found in media url: ${attributes[key].url} | fallback to direct assignment`
+              `Converter | [${component}.${key}] unable processing media field: ${error.message} | fallback to direct assignment`
             );
             normalizedData[key] = `${attributes[key].url}`;
           }
         } else {
+          strapi.log.warn(
+            `Converter | [${component}.${key}] host not found in media url: ${attributes[key].url} | fallback to direct assignment`
+          );
           normalizedData[key] = `${attributes[key].url}`;
         }
       } else {
