@@ -86,6 +86,29 @@ export class StrapiResponseTransformer {
     return data;
   }
 
+  private buildMediaUrl(originalUrl: string): string {
+    if (!this.cname) return originalUrl;
+    try {
+      // Ensure CNAME is a valid base URL (with protocol)
+      const base = new URL(this.cname);
+      if (originalUrl.startsWith('/')) {
+        // Relative URL: join with CNAME base
+        return new URL(originalUrl, base).toString();
+      } else {
+        // Absolute URL: replace host and protocol with CNAME's
+        const orig = new URL(originalUrl);
+        orig.protocol = base.protocol;
+        orig.host = base.host;
+        return orig.toString();
+      }
+    } catch (error) {
+      strapi.log.warn(
+        `Converter | buildMediaUrl failed for url: ${originalUrl} with CNAME: ${this.cname} | ${error.message}`
+      );
+      return originalUrl;
+    }
+  }
+
   /**
    * Converts attributes object by normalizing each property.
    * @param attributes Attributes object from Strapi data.
@@ -102,23 +125,8 @@ export class StrapiResponseTransformer {
         this.mediaFields.includes(component ? `${component}.${key}` : key) &&
         this.hasUrlAttribute(attributes, key)
       ) {
-        if (this.cname) {
-          try {
-            const url = attributes[key].url ?? '';
-            if (url.startsWith('/')) normalizedData[key] = `${this.cname}${url}`;
-            else normalizedData[key] = `${url}`.replace(new URL(url).host, `${this.cname}`);
-          } catch (error) {
-            strapi.log.warn(
-              `Converter | [${component}.${key}] unable processing media field: ${error.message} | fallback to direct assignment`
-            );
-            normalizedData[key] = `${attributes[key].url}`;
-          }
-        } else {
-          strapi.log.warn(
-            `Converter | [${component}.${key}] host not found in media url: ${attributes[key].url} | fallback to direct assignment`
-          );
-          normalizedData[key] = `${attributes[key].url}`;
-        }
+        const url = attributes[key].url ?? '';
+        normalizedData[key] = this.buildMediaUrl(url);
       } else {
         normalizedData[key] = this.convertTo(
           attributes[key],
