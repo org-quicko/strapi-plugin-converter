@@ -46,8 +46,5 @@
     "name": "org-quicko-strapi-plugin-converter",
     "displayName": "org-quicko-strapi-plugin-converter",
     "description": "A Strapi plugin that converts API responses into a standardized response format. This plugin automatically transforms Strapi's default API response structure to create a flattened data format."
-  },
-  "dependencies": {
-    "@org-quicko/strapi-plugin-converter": "file:.yalc/@org-quicko/strapi-plugin-converter"
   }
 }

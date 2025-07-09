@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "@org-quicko/strapi-plugin-converter": {
-      "signature": "ef18101b1f06c6ed2c84d38237f9393b",
-      "file": true
-    }
-  }
-}
